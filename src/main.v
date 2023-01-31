@@ -19,12 +19,12 @@ fn (a Vec2) - (b Vec2) Vec2 {
 }
 
 
-
 struct Img {
 mut:
 	img gg.Image
 	pos Vec2
 	vel Vec2
+	size f32
 }
 
 struct App {
@@ -55,52 +55,59 @@ fn main() {
 		frame_fn: frame
 		user_data: app
 		init_fn: init
-		keydown_fn: on_keydown
 	)
 
 	app.ctx.run()
 
 }
 
-fn on_keydown(key gg.KeyCode, mod gg.Modifier, mut app &App) {
-
-	if key == .w || key == .up {
-		app.img.vel.y = -5
-	}
-	
-	if key == .s || key == .down {
-		app.img.vel.y = 5
-	}
-
-	if key == .a || key == .left {
-		app.img.vel.x = -5
-	}
-
-	if key == .d || key == .right {
-		app.img.vel.x = 5
-	}
-
-	else {
-		app.img.vel.x = 0
-		app.img.vel.y = 0
-	}
-}
-
 fn init(mut app &App) {
 
 	app.img.img = app.ctx.create_image(os.resource_abs_path(app.file_name))
-
+	app.img.pos = Vec2{60, 60}
+	app.img.size = 2
 }
 
 fn (mut app App) draw() {
-
-	app.img.pos += app.img.vel
-
-	app.ctx.draw_image(app.img.pos.x, app.img.pos.y, app.img.img.width, app.img.img.height, app.img.img)
-
+	app.ctx.draw_image(app.img.pos.x, app.img.pos.y, app.img.img.width*app.img.size, app.img.img.height*app.img.size, app.img.img)
 }
 
 fn frame(mut app &App) {
+
+	app.img.vel.x = 0
+	app.img.vel.y = 0
+
+
+	if app.ctx.pressed_keys[int(gg.KeyCode.a)] || app.ctx.pressed_keys[int(gg.KeyCode.left)] {
+		println("Left key down")
+		app.img.vel.x -= 5
+	}
+
+	if app.ctx.pressed_keys[int(gg.KeyCode.d)] || app.ctx.pressed_keys[int(gg.KeyCode.right)] {
+		println("Right key down")
+		app.img.vel.x += 5
+	}
+
+	if app.ctx.pressed_keys[int(gg.KeyCode.w)] || app.ctx.pressed_keys[int(gg.KeyCode.up)] {
+		println("Up key down")
+		app.img.vel.y -= 5
+	}
+
+	if app.ctx.pressed_keys[int(gg.KeyCode.s)] || app.ctx.pressed_keys[int(gg.KeyCode.down)] {
+		println("Down key down")
+		app.img.vel.y += 5
+	}
+	
+
+	if app.ctx.pressed_keys[int(gg.KeyCode.escape)] {
+		exit(0)
+	}
+
+	app.img.pos.x += app.img.vel.x
+	app.img.pos.y += app.img.vel.y
+
+
+
 	app.ctx.begin()
 	app.draw()
 	app.ctx.end()
