@@ -37,6 +37,7 @@ mut:
 const (
 	win_width = 800
 	win_height = 600
+	speed = 5
 )
 
 fn main() {
@@ -72,6 +73,7 @@ fn (mut app App) draw() {
 	app.ctx.draw_image(app.img.pos.x, app.img.pos.y, app.img.img.width*app.img.size, app.img.img.height*app.img.size, app.img.img)
 }
 
+[live]
 fn frame(mut app &App) {
 
 	app.img.vel.x = 0
@@ -80,24 +82,24 @@ fn frame(mut app &App) {
 
 	if app.ctx.pressed_keys[int(gg.KeyCode.a)] || app.ctx.pressed_keys[int(gg.KeyCode.left)] {
 		println("Left key down")
-		app.img.vel.x -= 5
+		app.img.vel.x -= speed
 	}
 
 	if app.ctx.pressed_keys[int(gg.KeyCode.d)] || app.ctx.pressed_keys[int(gg.KeyCode.right)] {
 		println("Right key down")
-		app.img.vel.x += 5
+		app.img.vel.x += speed
 	}
 
 	if app.ctx.pressed_keys[int(gg.KeyCode.w)] || app.ctx.pressed_keys[int(gg.KeyCode.up)] {
 		println("Up key down")
-		app.img.vel.y -= 5
+		app.img.vel.y -= speed
 	}
 
 	if app.ctx.pressed_keys[int(gg.KeyCode.s)] || app.ctx.pressed_keys[int(gg.KeyCode.down)] {
 		println("Down key down")
-		app.img.vel.y += 5
+		app.img.vel.y += speed
 	}
-	
+
 
 	if app.ctx.pressed_keys[int(gg.KeyCode.escape)] {
 		exit(0)
